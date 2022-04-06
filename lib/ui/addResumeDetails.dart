@@ -1,15 +1,13 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
 import '../components/styleandborder.dart';
+
+
 class AddResumeDetails extends StatefulWidget {
   String id;
   String name;
@@ -44,7 +42,10 @@ class AddResumeDetails extends StatefulWidget {
   State<AddResumeDetails> createState() => _AddResumeDetailsState();
 }
 
+
+
 class _AddResumeDetailsState extends State<AddResumeDetails> {
+
   _selecttDate(BuildContext context) async {
     DateTime newSelectedDate = await showDatePicker(
         context: context,
@@ -69,22 +70,24 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
     );
     return newSelectedDate;
   }
+
   bool isLoading=false;
   final fb=FirebaseDatabase.instance;
 
 
   final _formKey = GlobalKey<FormState>();
+
   TextEditingController _nameController=TextEditingController();
   TextEditingController _ContactController=TextEditingController();
   TextEditingController _EmailController=TextEditingController();
   TextEditingController _AddressController=TextEditingController();
-  TextEditingController dobController = new TextEditingController();
-  TextEditingController DegreeController = new TextEditingController();
-  TextEditingController StartController = new TextEditingController();
-  TextEditingController EndController = new TextEditingController();
-  TextEditingController EducationEndController = new TextEditingController();
-  TextEditingController titleController = new TextEditingController();
-  TextEditingController descriptionCotroller = new TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController DegreeController = TextEditingController();
+  TextEditingController StartController = TextEditingController();
+  TextEditingController EndController = TextEditingController();
+  TextEditingController EducationEndController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionCotroller = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
   DateTime _selectedStartDate = DateTime.now();
@@ -110,6 +113,154 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
   }
   String selectedGrades;
 
+  List<Widget> workDetail = [];
+
+ Widget addWordDetail(){
+   return Column(
+     children: [
+       Text("Work Experience",style: Textstyle1.signupText,),
+       SizedBox(height: 10,),
+       TextFormField(
+         style: Textstyle1.signupText,
+         validator: (value) {
+           if (value == null || value.isEmpty) {
+             return 'Enter Title';
+           }
+           return null;
+         },
+         decoration: Textfield1.inputdec.copyWith(hintText: "Title"),),
+
+
+       SizedBox(height: 10,),
+       TextFormField(
+         style: Textstyle1.signupText,
+         // controller: descriptionCotroller,
+         validator: (value) {
+           if (value == null || value.isEmpty) {
+             return 'Enter Descrition';
+           }
+           return null;
+         },
+         decoration: Textfield1.inputdec.copyWith(hintText: "Descrition"),
+       ),
+       SizedBox(height: 10,),
+
+       Row(
+         children: [
+           Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+               Text("Select Date",style: Textstyle1.signupText,),
+               SizedBox(height: 10,),
+               Container(
+                 width:double.infinity,
+                 child: TextFormField(
+                   validator: (value) {
+                     if (value == null || value.isEmpty) {
+                       return 'Select date';
+                     }
+                     return null;
+                   },
+                   maxLength: 20,maxLengthEnforced: true,
+                   readOnly: true,
+                   style: Textstyle1.signupText,
+                   keyboardType: TextInputType.number,
+                   // controller: StartController,
+                   focusNode: AlwaysDisabledFocusNode(),
+                   onTap: () async {
+                     // FocusScope.of(context).unfocus();
+
+                     //DateTime newSelectedDate = await _selecttDate(context);
+                     /*if (newSelectedDate != null) {
+                      *//*setState(() {
+                        _selectedStartDate = newSelectedDate;
+                        initializeDateFormatting('es');
+                        StartController
+                          ..text = DateFormat("dd-MMM-yyyy").format(_selectedStartDate)
+                          ..selection = TextSelection.fromPosition(TextPosition(
+                              offset: StartController.text.length,
+                              affinity: TextAffinity.upstream
+                          )
+                          );
+                      });*//*
+                    }*/
+                   },
+                   decoration: fieldStyle.copyWith(counterText: " ",
+                     hintStyle: Textstyle1.signupText.copyWith(
+                       color: Color(0xffB8BCCA),
+                     ),
+                     hintText: "Start Date",
+                     focusedBorder: OutlineInputBorder(
+                       borderSide: BorderSide(
+                         color: Colors.transparent,
+                       ),
+                     ),
+                   ),
+                 ),
+               ),
+             ],
+           ),
+           Expanded(child: SizedBox(width: 10,)),
+           Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+               Text("",style: Textstyle1.signupText,),
+               SizedBox(height: 10,),
+               Container(
+                 width:double.infinity,
+                 child: TextFormField(
+                   validator: (value) {
+                     if (value == null || value.isEmpty) {
+                       return 'Select date';
+                     }
+                     return null;
+                   },
+                   maxLength: 20,maxLengthEnforced: true,
+                   readOnly: true,
+                   style: Textstyle1.signupText,
+                   keyboardType: TextInputType.number,
+                   // controller: EndController,
+                   focusNode: AlwaysDisabledFocusNode(),
+                   onTap: () async {
+                     // FocusScope.of(context).unfocus();
+
+                     /*  DateTime newSelectedDate = await _selecttDate(context);
+                    if (newSelectedDate != null) {
+                      setState(() {
+                        _selectedEndDate = newSelectedDate;
+                        initializeDateFormatting('es');
+                        EndController
+                          ..text = DateFormat("dd-MMM-yyyy").format(_selectedEndDate)
+                          ..selection = TextSelection.fromPosition(TextPosition(
+                              offset: EndController.text.length,
+                              affinity: TextAffinity.upstream
+                          )
+                          );
+                      });
+                    }*/
+                   },
+                   decoration: fieldStyle.copyWith(counterText: " ",
+                     hintStyle: Textstyle1.signupText.copyWith(
+                       color: Color(0xffB8BCCA),
+                     ),
+                     hintText: "End Date",
+                     focusedBorder: OutlineInputBorder(
+                       borderSide: BorderSide(
+                         color: Colors.transparent,
+                       ),
+                     ),
+                   ),
+                 ),
+               ),
+             ],
+           ),
+
+         ],),
+
+     ],);
+ }
+
+
 
   @override
   void initState() {
@@ -128,11 +279,12 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
       descriptionCotroller.text=widget.workdescriton;
       StartController.text=widget.workstartdate;
       EndController.text=widget.workenddate;
-
-
     }
   }
+
+
   var height,width;
+
   @override
   Widget build(BuildContext context) {
     height=MediaQuery.of(context).size.height;
@@ -528,7 +680,11 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
 
               SizedBox(height:20,),
 
-             isLoading==true?CircularProgressIndicator(): Container(
+             isLoading==true
+                 ?
+             CircularProgressIndicator()
+                 :
+             Container(
                 height: MediaQuery.of(context).size.height*.055,
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
@@ -546,7 +702,7 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
                     ),
                   ),
                   child: Text(
-                    'Create Resume',
+                    widget.name != null ?  "Update Resume" : 'Create Resume',
                     style:
                     TextStyle(color: Appcolors.signupsubmitButtontextcolor, fontSize: 16),
                   ),
@@ -561,7 +717,7 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
                               final docuser = FirebaseFirestore.instance
                                   .collection('fields').doc();
 
-                              final json={
+                              final json = {
                                 'name':_nameController.text,
                                 'contact':_ContactController.text,
                                 'email':_EmailController.text,
@@ -575,6 +731,8 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
                                 'workstartdate':StartController.text,
                                 'workenddate':EndController.text
                               };
+
+
                               await docuser.set(json);
                               setState(() {
                                 isLoading=false;
@@ -592,7 +750,7 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
                                 'grades':selectedGrades,
                                 'Educationenddate':EducationEndController.text,
                                 'worktitle':titleController.text,
-                                'workdesc':descriptionCotroller.text,
+                                 'workdesc':"word Desc",
                                 'workstartdate':StartController.text,
                                 'workenddate':EndController.text
                               };
@@ -600,6 +758,7 @@ class _AddResumeDetailsState extends State<AddResumeDetails> {
                               setState(() {
                                 isLoading=false;
                               });
+                              Navigator.pop(context);
                             }
                       // createuser(name:_nameController.text,email: _EmailController.text,address: _AddressController.text,);
 

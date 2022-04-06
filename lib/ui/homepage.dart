@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cvmakerr/ui/firebase_service.dart';
 import 'package:cvmakerr/ui/resumePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,28 +18,34 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Appcolors.signupsubmitButton,title:Text(
+          backgroundColor: Appcolors.signupsubmitButton,
+          title:Text(
         'List of all Resume',
         style:
         TextStyle(color: Appcolors.signupsubmitButtontextcolor, fontSize: 16),
       )
           ,actions: [IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AddResumeDetails()));}, icon: Icon(Icons.add))]),
-      body: StreamBuilder<QuerySnapshot>(stream: FirebaseFirestore.instance.collection('fields').snapshots()
-        ,builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('fields').snapshots(),
+        builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
           if(snapshot.hasError){
             return Text("erro");
           }
-          if(snapshot.connectionState==ConnectionState.waiting){
+          if(snapshot.connectionState == ConnectionState.waiting){
             return Text("laoding");
           }
-          final data=snapshot.requireData;
+          final data = snapshot.data;
+          print(data);
           return ListView.builder(
-              itemCount: data.size,itemBuilder: (context,index){
-            return    Padding(
+              itemCount: data.docs.length,
+              itemBuilder: (context,index){
+
+            return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 10),
               child: Column(
                 children: [
-                  InkWell(onTap: (){
+                  InkWell(
+                    onTap: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>ResumePage(id:data.docs[index].id,name:data.docs[index]['name'] ,address: data.docs[index]['address'],contact: data.docs[index]['contact'].toString(),email: data.docs[index]['email'],dob: data.docs[index]['dob'],Educationdegree: data.docs[index]['degree'],Educationenddate: data.docs[index]['Educationenddate'],Educationgrade: data.docs[index]['grades'],workdescriton: data.docs[index]['workdesc'],workenddate: data.docs[index]['workenddate'],workstartdate: data.docs[index]['workstartdate'],worktitle: data.docs[index]['worktitle'],)));
 
                   },
@@ -89,7 +96,26 @@ class _HomepageState extends State<Homepage> {
                                 //Image.asset("assets/images/Delete.png",height: 25,color: Appcolors.signuptextcolor)),
                                 SizedBox(width: 20),
                                 InkWell(onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AddResumeDetails(id:data.docs[index].id,name:data.docs[index]['name'] ,address: data.docs[index]['address'],contact: data.docs[index]['contact'].toString(),email: data.docs[index]['email'],dob: data.docs[index]['dob'],Educationdegree: data.docs[index]['degree'],Educationenddate: data.docs[index]['Educationenddate'],Educationgrade: data.docs[index]['grades'],workdescriton: data.docs[index]['workdesc'],workenddate: data.docs[index]['workenddate'],workstartdate: data.docs[index]['workstartdate'],worktitle: data.docs[index]['worktitle'],)));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context)=>AddResumeDetails(
+                                            id:data.docs[index].id,
+                                            name:data.docs[index]['name'] ,
+                                            address: data.docs[index]['address'],
+                                            contact: data.docs[index]['contact'].toString(),
+                                            email: data.docs[index]['email'],
+                                            dob: data.docs[index]['dob'],
+                                            Educationdegree: data.docs[index]['degree'],
+                                            Educationenddate: data.docs[index]['Educationenddate'],
+                                            Educationgrade: data.docs[index]['grades'],
+                                            workdescriton: data.docs[index]['workdesc'],
+                                            workenddate: data.docs[index]['workenddate'],
+                                            workstartdate: data.docs[index]['workstartdate'],
+                                            worktitle: data.docs[index]['worktitle'],
+                                          ),
+                                      ),
+                                  );
                                 },child:
                                 Icon(Icons.edit)),
                                 //Image.asset("assets/images/Edit.png",height: 24,color: Appcolors.signuptextcolor)),
